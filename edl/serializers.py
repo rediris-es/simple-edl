@@ -77,8 +77,9 @@ class EdlEntrySerializer(serializers.ModelSerializer):
 
         # Run validation on Entry Value
         if data["edl"].edl_type == 'ip_address':
-            if not validators.ipv4(data['entry_value'], cidr=True):
-                raise serializers.ValidationError("entry_value is not a valid ipv4 address")
+            if not (validators.ipv4(data['entry_value'], cidr=True) or
+                    validators.ipv6(data['entry_value'], cidr=True) ) :
+                raise serializers.ValidationError("entry_value is not a valid IPv4 or IPv6  address")
         if data["edl"].edl_type == 'url':
             domain_list_entry_validator(data['entry_value'])
         if data["edl"].edl_type == 'fqdn':
